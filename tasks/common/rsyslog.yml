@@ -6,12 +6,11 @@
 
 - name: Configure rsyslog
   template:
-    src: templates/rsyslog.conf.j2
+    src: templates/common/rsyslog.conf.j2
     dest: /etc/rsyslog.conf
   notify: restart rsyslog
 
 - name: Enable rsyslog service
   service:
     name: rsyslog
-    state: started
     enabled: True

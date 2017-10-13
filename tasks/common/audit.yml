@@ -13,23 +13,23 @@
     state: present
   when: security_audit_space_left_action == 'email'
 
-- name: Configure auditd space_left action on low disk space
-  lineinfile:
-    create: True
-    path: /etc/audit/auditd.conf
-    line: "space_left_action = {{ security_audit_space_left_action }}"
-    regexp: ^space_left_action
-
 - name: Configure audispd
   template:
-    src: templates/audisp-remote.conf.j2
-    dest: /etc/audisp/audisp-remote.conf
+    src: "templates/el{{ ansible_distribution_major_version }}/{{ item.split('/')[-1] }}.j2"
+    dest: "{{ item }}"
+  with_items: "{{ security_audit_audispd_configuration_files }}"
   when: security_audit_audisp_configure == True
 
 - name: Configure audit rules
   template:
-    dest: /etc/audit/rules.d/audit.rules
-    src: templates/audit.rules.j2
+    dest: "{{ security_audit_configuration_file_path }}"
+    src: templates/common/audit.rules.j2
+  notify: reload audit rules
+
+- name: Configure auditd.conf
+  template:
+    dest: /etc/audit/auditd.conf
+    src: templates/common/auditd.conf.j2
 
 - name: Check kernel arguments
   shell: |
@@ -50,5 +50,4 @@
 - name: Enable auditd service
   service:
     name: auditd
-    state: started
     enabled: True

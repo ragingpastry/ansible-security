@@ -18,7 +18,7 @@ Role Variables
 
 There are too many variables for this role to go over here. Please see `defaults/main.yml` for a full list.  
 
-**centos_7_security_scanner**
+**security_scanner**
   * Type: String
   * Default: Nessus
   * This variable defines which security verifier we will be attempting to match. Different scanners will look for different implementations of the DISA STIG security rules.

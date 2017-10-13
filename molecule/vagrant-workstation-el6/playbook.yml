@@ -8,6 +8,7 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       become: True
       changed_when: False
+
     - name: Install oscap
       yum:
         name: "{{ item }}"
@@ -15,6 +16,7 @@
       with_items:
         - "openscap-scanner"
         - "scap-security-guide"
+        - "libselinux-python"
 
 - name: Converge
   hosts: all
