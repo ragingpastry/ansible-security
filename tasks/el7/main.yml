@@ -39,7 +39,3 @@
 
 - include: common/modules.yml
   when: security_module_blacklist_configure == True
-
-#- include: common/file_permissions.yml
-#  tags:
-#    - RHEL-07-020630

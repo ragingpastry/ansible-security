@@ -63,6 +63,7 @@ security_authentication_ocredit: -1
 security_authentication_minclass: 4
 security_authentication_maxrepeat: 2
 security_authentication_maxclassrepeat: 4
+security_authentication_crypt_style: sha512
 
 security_authentication_multifactor_configure: True
 security_authentication_multifactor_packages:
@@ -76,9 +77,6 @@ security_clamav_exclude_paths:
   - ^/warehouse/
   - ^/home/
   - ^/xmidas/
-
-## File Permission Settings
-security_file_permissions_configure: True
 
 ### Kernel Settings
 security_kernel_settings_configure: True
