@@ -1,36 +1,21 @@
 ---
-# tasks file for centos-7-security
-- include: yum.yml
-  when: security_yum_verify_gpg == True
+- name: Check if we are in a chroot
+  shell: 'if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then echo True; else echo False; fi'
+  failed_when: False
+  changed_when: False
+  register: chroot
 
-- include: aide.yml
-  when: security_aide_configure == True
+- name: Gather OS specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version }}.yml"
+    - "{{ ansible_os_family | lower }}.yml"
+  tags: vars
 
-- include: mounts.yml
-  when: security_mounts_configure == True
+- include: el7/main.yml
+  when: ansible_os_family == "RedHat"
+        and ansible_distribution_major_version|int == 7
 
-- include: modules.yml
-  when: security_module_blacklist_configure == True
-
-- include: authentication.yml
-  when: security_authentication_configure == True
-
-- include: kernel_settings.yml
-  when: security_kernel_settings_configure == True
-
-- include: audit.yml
-  when: security_audit_configure == True
-
-- include: rsyslog.yml
-  when: security_rsyslog_configure == True
-
-- include: sshd.yml
-  when: security_sshd_configure == True
-
-- include: grub.yml
-  when: security_grub_configure == True
-
-- include: gnome.yml
-  when: security_gnome_configure == True
-
-- include: miscellaneous.yml
+- include: el6/main.yml
+  when: ansible_os_family == "RedHat"
+        and ansible_distribution_major_version|int == 6
