@@ -10,11 +10,19 @@
     src: templates/common/sshd_config.j2
   notify: restart sshd
 
+- name: Gather SSH host keys
+  shell: find /etc/ssh/ -name "ssh_host*" ! -name "*.pub"
+  register: ssh_host_keys
+  changed_when: False
+  failed_when: False
+  tags:
+    - skip_ansible_lint
+
 - name: Fix SSH host key permissions
   file:
     path: "/etc/ssh/{{ item }}"
     mode: 0600
-  with_items: "{{ security_sshd_default_host_keys }}"
+  with_items: "{{ ssh_host_keys.stdout }}"
 
 - name: Ensure firewall port is opened
   firewalld:
