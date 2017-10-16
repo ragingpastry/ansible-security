@@ -20,10 +20,11 @@
   hosts: all
   become: True
   roles:
-    - role: ansible-centos-7-security
+    - role: ansible-security
       security_scanner: nessus
       security_profile: stig-rhel7-disa
       security_yum_repo_gpgcheck: False
+      security_clamav_configure: False
 
   post_tasks:
     - name: Reboot after converge

@@ -19,6 +19,7 @@
   when: security_gnome_configure == True
 
 - include: el7/virus_scan.yml
+  when: security_clamav_configure == True
 
 - include: el7/firewalld.yml
   when: security_firewall_configure == True

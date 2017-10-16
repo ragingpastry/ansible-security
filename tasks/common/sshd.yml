@@ -20,9 +20,9 @@
 
 - name: Fix SSH host key permissions
   file:
-    path: "/etc/ssh/{{ item }}"
+    path: "{{ item }}"
     mode: 0600
-  with_items: "{{ ssh_host_keys.stdout }}"
+  with_items: "{{ ssh_host_keys.stdout_lines }}"
 
 - name: Ensure firewall port is opened
   firewalld:

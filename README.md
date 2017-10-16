@@ -68,7 +68,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - role: ansible-centos-7-security
+         - role: ansible-security
            security_audit_configure: False
            security_mounts_configure: False
            
