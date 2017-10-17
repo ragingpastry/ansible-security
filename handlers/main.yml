@@ -28,7 +28,7 @@
 - name: reload audit rules
   service:
     name: auditd
-    state: reloaded
+    state: "{{ chroot.stdout | bool | ternary(omit, 'reloaded') }}"
 
 - name: restart rsyslog
   service:
