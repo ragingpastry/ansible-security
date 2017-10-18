@@ -7,6 +7,9 @@
 - name: Ensure symlinks are created
   file:
     src: /etc/modprobe.d/disa_stig_blacklist.conf
-    dest: /etc/modprobe.d/nousbstorage
+    dest: "/etc/modprobe.d/{{ item }}"
     state: link
   when: security_scanner == 'nessus'
+  with_items:
+    - "blacklist.conf"
+    - "nousbstorage"
