@@ -355,13 +355,201 @@ def test_nessus_rhel_07_030000(host):
     assert host.service('auditd.service').is_running
 
 
-def test_nessus_rhel_07_030300(host):
+def test_nessus_rhel_07_030300_030320(host):
     """
     rhel-07-030300 - The OS must off-load audit records onto a different system or media from the system being audited
-    rhel_07_030310 - The OS must encrypt the transfer of audit records off-loaded onto a different system or media from the system being audited
+    rhel-07-030310 - The OS must encrypt the transfer of audit records off-loaded onto a different system or media from the system being audited
+    rhel-07-030320 - The audit system must take appropriate action when the audit storage volume is full"
+    rhel-07-030321 - The audit system must take appropriate action when there is an error sending audit records to a remote system
     """
 
     content = host.file('/etc/audisp/audisp-remote.conf').content
 
     assert bool(re.search("[\s]*remote_server[\s]*=[\s]*loghost", content))
     assert bool(re.search("[\s]*enable_krb5[\s]*=[\s]*yes", content))
+    assert bool(re.search("[\s]*disk_full_action[\s]*=[\s]*([Ss][Yy][Ss][Ll][Oo][Gg]|[Ss][Ii][Nn][Gg][Ll][Ee]|[Hh][Aa][Ll][Tt])", content))
+    assert bool(re.search("[\s]*network_failure_action[\s]*=[\s]*([Ss][Yy][Ss][Ll][Oo][Gg]|[Ss][Ii][Nn][Gg][Ll][Ee]|[Hh][Aa][Ll][Tt])", content))
+
+def test_nessus_rhel_07_030330_030350(host):
+    """
+    rhel-07-030330 - The OS must immediately notify the SA and ISSO when allocated audit record storage volume reaches 75%"
+    rhel-07-030340 - The OS must immediately notify the SA and ISSO via email when the threshold for the max audit storage capacity is reached
+    rhel-07-030350 - The OS must immediately notify the SA and ISSO when the threshold for the repo max audit record storage capacity is reached
+    """
+
+    content = host.file('/etc/audit/auditd.conf').content
+
+    assert bool(re.search("[\s]*space_left[\s]*=[\s]*75", content))
+    assert bool(re.search("[\s]*space_left_action[\s]*=[\s]*email", content))
+    assert bool(re.search("[\s]*action_mail_acct[\s]*=[\s]*root", content))
+
+def test_nessus_rhel_07_030370_030400(host):
+    """
+    rhel-07-030370 - All uses of the chown command must be audited -64 bit
+    rhel-07-030380 - All uses of the fchown comand must be audited - 64bit
+    rhel-07-030390 - All uses of the lcown command must be audited - 64bit
+    rhel-07-030400 - All uses of the fchownat command must be audited - 64bit
+    rhel-07-030410 - All uses of the chmod command must be audited - 64bit
+    rhel-07-030420 - All uses of the fchmod command must be audited - 64bit
+    rhel-07-030430 - All uses of the fchmodat command must be audited - 64bit
+    rhel-07-030440 - All uses of the setxattr command must be audited - 64bit
+    rhel-07-030450 - All uses of the fsetxattr command must be audited - 64bit
+    rhel-07-030460 - All uses of the lsetxattr command must be audited - 64bit
+    rhel-07-030470 - All uses of the removexattr command must be audited - 64bit
+    rhel-07-030480 - All uses of the fremovexattr command must be audited - 64bit
+    rhel-07-030490 - All uses of the lremovexattr command must be audited - 64bit
+    rhel-07-030500 - All uses of the creat command must be audited - 64bit
+    rhel-07-030510 - All uses of the open command must be audited - 64bit
+    rhel-07-030520 - All uses of the openat command must be audited - 64bit
+    rhel-07-030530 - All uses of the open_by_handle_at command must be audited - 64 bit
+    rhel-07-030540 - All uses of the truncate command must be audited - 64bit
+    rhel-07-030550 - All uses of the ftruncate command must be audited - 64bit
+    rhel-07-030740 - All uses of the mount command must be audited - 64bit
+    rhel-07-030820 - All uses of the init_module command must be audited - 64bit
+    rhel-07-030830 - ALl uses of the delete_module command must be audited - 64bit
+    rhel-07-030880 - All uses of the rename command must be audited - 64bit
+    rhel-07-030890 - All uses of the renameat command must be audited - 64bit
+    rhel-07-030900 - All uses of the rmdir command must be audited - 64bit
+    rhel-07-030910 - All uses of the unlink command must be audited - 64bit
+    rhel-07-030920 - All uses of the unlinkat command must be audited - 64bit
+    rhel-07-030560 - All uses of the semanage command must be audited
+    rhel-07-030570 - All uses of the setsebool command must be audited
+    rhel-07-030580 - All uses of the chcon command must be audited
+    rhel-07-030590 - All uses of the restorecon command must be audited
+    rhel-07-030600 - The OS must generate audit records for all successful/unsuccessful account access count events
+    rhel-07-030610 - The OS must generate audit records for all unsuccessful account access events
+    rhel-07-030620 - The OS must generate audit records for all successful account access events
+    rhel-07-030630 - All uses of the passwd command must be audited
+    rhel-07-030640 - All uses of the unix_chkpwd command must be audited
+    rhel-07-030650 - All uses of the gpasswd command must be audited
+    rhel-07-030660 - All uses of the chage command must be audited
+    rhel-07-030680 - All uses of the su command must be audited
+    rhel-07-030690 - All uses of the sudo command must be audited
+    rhel-07-030700 - All uses of the sudoers command must be audited - sudoers
+    rhel-07-030710 - All uses of the newgrp command must be audited
+    rhel-07-030720 - All uses of the chsh command must be audited
+    rhel-07-030730 - All uses of the sudoedit command must be audited
+    rhel-07-030750 - All uses of the umount command must be audited
+    rhel-07-030760 - All uses of the postdrop command must be audited
+    rhel-07-030770 - All uses of the postqueue command must be audited
+    rhel-07-030780 - All uses of the ssh-keysign command must be audited
+    rhel-07-030800 - All uses of the crontab command must be audited
+    rhel-07-030810 - All uses of the pam_timestamp_check command must be audited
+    rhel-07-030840 - All uses of the insmod command must be audited
+    rhel-07-030850 - All uses of the rmmod command must be audited
+    rhel-07-030860 - All uses of the modprobe command must be audited
+    rhel-07-030870 - The OS must generate auti records for all creations, modifications, disabling, and termination events for /etc/passwd
+    rhel-07-030871 - The OS must generate audit records for all creations, modifications, disabling, and terminiation events for /etc/group
+    rhel-07-030872 - The OS must generate audit records for all creations, modifications, disabling, and termination events for /etc/gshadow
+    rhel-07-030873 - The OS must generate audit records for all creations, modifications, disabling, and termination events for /etc/shadow
+    rhel-07-030874 - The OS must generate audit records for all creations, modifications, disabling, and termination events for /etc/opasswd
+    """
+
+    content = host.file('/etc/audit/rules.d/audit.rules').content
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchownat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmodat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+setxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+removexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchownat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmodat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+setxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+removexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+creat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+openat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open_by_handle_at[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+truncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+ftruncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+creat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+openat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open_by_handle_at[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+truncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+ftruncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
+
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+init_module[\s]+-k[\s]+module-change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+delete_module[\s]+-k[\s]+module-change", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+init_module[\s]+-k[\s]+module-change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+delete_module[\s]+-k[\s]+module-change", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+rename[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+renameat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+rmdir[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+unlink[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+unlinkat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rename[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+renameat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rmdir[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlink[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlinkat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/semanage[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/setsebool[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/chcon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/restorecon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+
+    assert bool(re.search("[\s]*-w[\s]+/var/log/tallylog[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
+    assert bool(re.search("[\s]*-w[\s]+/var/run/faillock/[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
+    assert bool(re.search("[\s]*-w[\s]+/var/log/lastlog[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/passwd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/unix_chkpwd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/userhelper[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/su[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/sudo[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/sudoers[\s]+-p[\s]+wa[\s]+-k[\s]+privileged-actions", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/sudoers\.d[\s]+-p[\s]+wa[\s]+-k[\s]+privileged-actions", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/newgrp[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chsh[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/sudoedit[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/umount[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postdrop[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postqueue[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
+    
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/libexec/openssh/ssh-keysign[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-ssh", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/crontab[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-cron", content))
+
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/pam_timestamp_check[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-pam", content))
+
+    assert bool(re.search("[\s]*-w[\s]+/sbin/insmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
+    assert bool(re.saerch("[\s]*-w[\s]+/sbin/rmmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
+    assert bool(re.search("[\s]*-w[\s]+/sbin/modprobe[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
+
+    assert bool(re.search("[\s]*-w[\s]+/etc/passwd[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/group[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/gshadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/shadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/shadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
