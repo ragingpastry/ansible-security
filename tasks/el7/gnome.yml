@@ -1,4 +1,9 @@
 ---
+- name: Ensure gresource is installed
+  package:
+    name: glib2-devel
+    state: installed
+
 - name: Disable GDM automatic and guest login
   template:
     src: templates/el7/custom.conf.j2
@@ -46,3 +51,23 @@
     state: link
   with_items:
     - "/etc/dconf/db/gdm.d/01-banner-message"
+
+- name: Gather login background configuration
+  shell: "gresource list /usr/share/gnome-shell/gnome-shell-theme.gresource | grep {{ security_gnome_background_file }}"
+  changed_when: False
+  failed_when: False
+  register: gdm_background
+
+- name: Ensure background_path is present
+  file:
+    path: "{{ security_gnome_background_path }}"
+    state: directory
+
+- name: Copy gdm background file
+  copy:
+    src: "{{ security_gnome_background_file }}"
+    dest: "{{ security_gnome_background_path }}/{{ security_gnome_background_file }}"
+
+- name: Configure login backgrounds
+  script: "files/el7/configure-gdm-login-screen.sh {{ security_gnome_background_path }}/{{ security_gnome_background_file }}"
+  when: gdm_background.rc != 0

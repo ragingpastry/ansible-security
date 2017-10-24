@@ -155,6 +155,8 @@ security_gnome_screensaver_idle_activation: "true"
 security_gnome_screensaver_lock_enabled: "true"
 security_gnome_screensaver_lock_delay: 5
 security_gnome_disable_user_list: true
+security_gnome_background_path: /opt/rrc/
+security_gnome_background_file: background.jpg
 
 ### Miscellaneous Settings
 security_screen: True
