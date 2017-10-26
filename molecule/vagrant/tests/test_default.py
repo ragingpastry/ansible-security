@@ -513,7 +513,7 @@ def test_nessus_rhel_07_030370_030400(host):
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/semanage[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/setsebool[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/chcon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chcon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/restorecon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
 
     assert bool(re.search("[\s]*-w[\s]+/var/log/tallylog[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
@@ -545,7 +545,7 @@ def test_nessus_rhel_07_030370_030400(host):
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/pam_timestamp_check[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-pam", content))
 
     assert bool(re.search("[\s]*-w[\s]+/sbin/insmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
-    assert bool(re.saerch("[\s]*-w[\s]+/sbin/rmmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
+    assert bool(re.search("[\s]*-w[\s]+/sbin/rmmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
     assert bool(re.search("[\s]*-w[\s]+/sbin/modprobe[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
 
     assert bool(re.search("[\s]*-w[\s]+/etc/passwd[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
