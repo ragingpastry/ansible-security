@@ -28,7 +28,7 @@ def test_openscap_compliance(host):
 
 def test_nessus_rhel_07_010050(host):
     """
-    Checks that the banner message is enabled
+    rhel-07-010050 - The OS must display the Standard Mandatory DoD Notice and Consent Banner before granting local or remote access via CLI
     """
 
     banner_string = "^WARNING This is a RESTRICTED ACCESS"
@@ -38,7 +38,7 @@ def test_nessus_rhel_07_010050(host):
 
 def test_nessus_rhel_07_010090(host):
     """
-    Checks that the screen package is installed
+    rhel-07-010090 - The OS must have the screen package installed
     """
 
     assert host.package("screen").is_installed
@@ -46,7 +46,7 @@ def test_nessus_rhel_07_010090(host):
 
 def test_nessus_rhel_07_010119(host):
     """
-    When passwords are changed or new passwords are established, pwquality must be used
+    rhel-07-010119 - When passwords are changed or new passwords are established, pwquality must be used
     """
 
     pwquality_regex = "password   required     pam_pwquality.so"
@@ -81,7 +81,7 @@ def test_nessus_rhel_07_010120_010190(host):
 
 def test_nessus_rhel_07_010200(host):
     """
-    The PAM service must be configured to store only encrypted representations of passwords
+    rhel-07-010200 - The PAM service must be configured to store only encrypted representations of passwords
     """
 
     content = host.file('/etc/pam.d/system-auth-ac').content
@@ -91,7 +91,7 @@ def test_nessus_rhel_07_010200(host):
 
 def test_nessus_rhel_07_010210(host):
     """
-    The shadow file must be configured to store onyl encrypted representations of passwords
+    rhel-07-010210 - The shadow file must be configured to store onyl encrypted representations of passwords
     """
 
     content = host.file('/etc/login.defs').content
@@ -100,7 +100,7 @@ def test_nessus_rhel_07_010210(host):
 
 def test_nessus_rhel_07_010220(host):
     """
-    User and group account administration utilities must be configured to store only encrypted
+    rhel-07-010220 - User and group account administration utilities must be configured to store only encrypted
     respresentations of passwords
     """
 
@@ -110,7 +110,8 @@ def test_nessus_rhel_07_010220(host):
 
 def test_nessus_rhel_07_010230_010250(host):
     """
-    Passwords for new users must be restricted to a 24hours/1 day minimum lifetime
+    rhel-07-010230 - Passwords for new users must be restricted to a 24hours/1 day minimum lifetime
+    rhel-07-010250 - Passwords for new users must be restricted to a 60-day maximum lifetime
     """
 
     content = host.file('/etc/login.defs').content
@@ -120,7 +121,7 @@ def test_nessus_rhel_07_010230_010250(host):
 
 def test_nessus_rhel_07_010270(host):
     """
-    Passwords must be prohibited from reuse for a minimum of five generations
+    rhel-07-010270 - Passwords must be prohibited from reuse for a minimum of five generations
     """
 
     content = host.file('/etc/pam.d/system-auth-ac').content
@@ -129,7 +130,7 @@ def test_nessus_rhel_07_010270(host):
 
 def test_nessus_rhel_07_010280(host):
     """
-    Passwords must be a minimum of 15 characters in length
+    rhel-07-010280 - Passwords must be a minimum of 15 characters in length
     """
 
     content = host.file('/etc/security/pwquality.conf').content
@@ -138,7 +139,7 @@ def test_nessus_rhel_07_010280(host):
 
 def test_nessus_rhel_07_010290(host):
     """
-    The system must not have accounts configured with blank or null passwords
+    rhel-07-010290 - The system must not have accounts configured with blank or null passwords
     """
 
     content = host.file('/etc/pam.d/system-auth-ac').content
@@ -147,7 +148,7 @@ def test_nessus_rhel_07_010290(host):
 
 def test_nessus_rhel_07_010300(host):
     """
-    The SSH daemon must not allow authentication using an empty password
+    rhel-07-010300 - The SSH daemon must not allow authentication using an empty password
     """
 
     content = host.file('/etc/ssh/sshd_config').content
@@ -156,7 +157,7 @@ def test_nessus_rhel_07_010300(host):
 
 def test_nessus_rhel_07_010310(host):
     """
-    The OS must disable account identifiers (individuals, groups, roles, and devices)
+    rhel-07-010310 - The OS must disable account identifiers (individuals, groups, roles, and devices)
     if the password expires
     """
 
@@ -166,7 +167,7 @@ def test_nessus_rhel_07_010310(host):
 
 def test_nessus_rhel_07_010320_010330(host):
     """
-    Accounts subject to three unsuccessful logon attempts within 15 minutes must be locked
+    rhel-07-010320 - Accounts subject to three unsuccessful logon attempts within 15 minutes must be locked
     """
 
     files = ['/etc/pam.d/system-auth-ac', '/etc/pam.d/password-auth-ac']
@@ -178,7 +179,7 @@ def test_nessus_rhel_07_010320_010330(host):
 
 def test_nessus_rhel_07_010430(host):
     """
-    The delay between logon prompts following a failed console logon attempt must be at least four seconds
+    rhel-07-010430 - The delay between logon prompts following a failed console logon attempt must be at least four seconds
     """
 
     content = host.file('/etc/login.defs').content
@@ -207,7 +208,7 @@ def test_nessus_rhel_07_020000_020010(host):
 
 def test_nessus_rhel_07_020030_020040(host):
     """
-    A file integrity tool must verify the baseline operating system configuration at least weekly - aide installed
+    rhel-07-020030 - A file integrity tool must verify the baseline operating system configuration at least weekly - aide installed
     """
 
     root_crontab = host.run("/usr/bin/crontab -u root -l | /usr/bin/grep 'aide'")
@@ -552,4 +553,192 @@ def test_nessus_rhel_07_030370_030400(host):
     assert bool(re.search("[\s]*-w[\s]+/etc/group[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
     assert bool(re.search("[\s]*-w[\s]+/etc/gshadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
     assert bool(re.search("[\s]*-w[\s]+/etc/shadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
-    assert bool(re.search("[\s]*-w[\s]+/etc/shadow[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+    assert bool(re.search("[\s]*-w[\s]+/etc/security/opasswd[\s]+-p[\s]+wa[\s]+-k[\s]+identity", content))
+
+
+def test_nessus_rhel_07_031000_031010(host):
+    """
+    rhel-07-031000 - The system must send rsyslog output to a log aggregation server
+    rhel-07-031010 - The rsyslog daemon must not accept log messages from other servers unless the server is being used for log aggregation
+    """
+
+    content = host.file('/etc/rsyslog.conf').content
+
+    assert bool(re.search("[\s]*\*\.\*[\s]+(@|@@|:omrelp:)loghost[\\s]*", content))
+    assert bool(re.search("[\s]*[Mm]od[Ll]oad[\s]*imtcp", content))
+
+
+def test_nessus_rhel_07_040000(host):
+    """
+    rhel-07-040000 - The OS must limit the number of concurrent sessions to 10 for all accounts and/or account types
+    """
+
+    content = host.file('/etc/security/limits.conf').content
+
+    assert bool(re.search("[\s]*\\*[\s]+hard[\s]+maxlogins[\s]+([1-9]|10)[\s]*", content))
+
+
+def test_nessus_rhel_07_040110(host):
+    """
+    rhel-07-040110 - A FIPS 140-2 approved cryptographic algorithm must be used for SSH communications
+    """
+
+    content = host.file('/etc/ssh/sshd_config').content
+
+    assert bool(re.search("[\s]*Ciphers[\s]+(,?aes128-ctr|,?aes192-ctr|,?aes256-ctr){3}[\s]*", content))
+
+
+def test_nessus_rhel_07_040300(host):
+    """
+    rhel-07-040300 - All networked systems must have SSH installed - openssh-clients
+    """
+
+    assert host.package('openssh-clients').is_installed
+    assert host.package('openssh-server').is_installed
+
+
+def test_nessus_rhel_07_040310(host):
+    """
+    rhel-07-040310 - All networked systems must use SSH for confidentiality and integrity of transmitted and received information
+    """
+
+    assert host.service('sshd').is_running
+
+def test_nessus_rhel_07_040320_040470(host):
+    """
+    rhel-07-040320 - All connections associated with SSH must terminate at the end of the session or after 10 minutes of inactivity
+    rhel-07-040330 - The SSH daemon must not allow authentication using RSA rhosts authentication
+    rhel-07-040340 - All network connections associated with SSH traffic must terminate after a period of inactivity
+    rhel-07-040350 - The SSH daemon must not allow authentication using rhosts authentication
+    rhel-07-040360 - The system must display date and time of the last successful account logon upon an SSH logon - PrintLastLog
+    rhel-07-040370 - The system must not permit direct logons to the root account using remote access via SSH
+    rhel-07-040380 - The SSH daemon must not allow authentication using known hosts authentication
+    rhel-07-040390 - The SSH daemon must be configured to only use the SSHv2 protocol
+    rhel-07-040400 - The SSH daemon must be configured to only use Message Authentication Codes (MACs) employing FIPS 140-2 approved algorithms
+    rhel-07-040430 - The SSH daemon must not permit Generic Security Service Application Program Interface (GSSAPI) authentication unless needed
+    rhel-07-040440 - The SSH daemon must not permit Kerberos authentication unless needed
+    rhel-07-040450 - The SSH daemon must perform strict mode checking of home directory configuration files
+    rhel-07-040460 - The SSH daemon must use privilege separation
+    rhel-07-040470 - The SSH daemon must not allow compresssion or must only allow compression after successful authentication
+    """
+
+    content = host.file('/etc/ssh/sshd_config').content
+
+    assert bool(re.search("[\s]*ClientAliveInterval[\s]+([1-9]|[1-8][0-9]|9[0-9]|[1-5][0-9]{2}|600)[\s]*", content))
+    assert bool(re.search("[\s]*RhostsRSAAuthentication[\s]+[Nn][Oo]", content))
+    assert bool(re.search("[\s]*ClientAliveCountMax[\s]+0[\s]*", content))
+    assert bool(re.search("[\s]*IgnoreRhosts[\s]+yes[\s]*", content))
+    assert bool(re.search("[\s]*PrintLastLog[\s]+[Yy][Ee][Ss][\s]*", content))
+    assert bool(re.search("[\s]*PermitRootLogin[\s]+no[\s]*", content))
+    assert bool(re.search("[\s]*IgnoreUserKnownHosts[\s]+[Yy][Ee][Ss][\s]*", content))
+    assert bool(re.search("[\s]*Protocol[\s]+2[\s]*", content))
+    assert bool(re.search("[\s]*MACs[\s]*(,?hmac-sha2-256|,?hmac-sha2-512){1,2}", content))
+    assert bool(re.search("[\s]*GSSAPIAuthentication[\s]+[nN][oO][\s]*", content))
+    assert bool(re.search("[\s]*KerberosAuthentication[\s]+[nN][oO]\s*", content))
+    assert bool(re.search("[\s]*StrictModes[\s]+[yY][eE][sS][\s]*", content))
+    assert bool(re.search("[\s]*UsePrivilegeSeparation[\s]+(sandbox|yes)", content))
+    assert bool(re.search("[\s]*Compression[\s]+([nN][oO]|[dD][eE][lL][aA][yY][eE][dD])\s*", content))
+
+
+def test_nessus_rhel_07_040410(host):
+    """
+    rhel-07-040410 - The SSH public host key files must have mode 0644 or less permissive
+    """
+
+    ssh_host_key_pub_files = host.run('ls /etc/ssh/*key.pub').stdout
+
+    for ssh_key_pub in ssh_host_key_pub_files.split('\n'):
+        assert host.file(ssh_key_pub).mode == 0o644
+
+
+def test_nessus_rhel_07_040420(host):
+    """
+    rhel-07-040420 - The SSH private host key files must have mode 06000 or less permissive
+    """
+
+    ssh_host_key_priv_files = host.run('ls /etc/ssh/*key').stdout
+
+    for ssh_key in ssh_host_key_priv_files.split('\n'):
+        assert host.file(ssh_key).mode == 0o600
+
+
+def test_nessus_rhel_07_040500(host):
+    """
+    rhel-07-040500 - The OS must synchronize clocks with a server that is synchronized to one of the redundant time servers
+    """
+
+    assert host.service('chronyd').is_running
+
+
+def test_nessus_rhel_07_040520(host):
+    """
+    rhel-07-040520 - The OS must enable an application firewall, if available
+    """
+
+    assert host.service('firewalld').is_running
+
+
+def test_nessus_rhel_07_040530(host):
+    """
+    rhel-07-040530 - The system must display the date and time of the last successful account logon up logon
+    """
+
+    content = host.file('/etc/pam.d/postlogin-ac').content
+
+    assert bool(re.search("[\s]*session[\s]+required[\s]+pam_lastlog\.so[\s]+showfailed", content))
+
+
+def test_nessus_rhel_07_040610(host):
+    """
+    rhel-07-040610 - The system must not forward Internet Protocol version 4 (IPv4) source-routed packets
+    rhel-07-040620 - The system must not forward Internet Protocol version 4 (IPv4) source-routed packets by default
+    rhel-07-040630 - The system must not respond to Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) echos.
+    rhel-07-040640 - The system must prevent Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
+    rhel-07-040641 - The system must ignore Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
+    rhel-07-040650 - The system must not allow interfaces to perform Internet Protocol version 4 (IPv4) ICMP redirects by default
+    rhel-07-040660 - The system must not send Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirects
+    rhel-07-040740 - The system must not be performing packet forwarding unless the system is a router
+    rhel-07-040830 - The system must no forward IPv6 source-routed packets
+    """
+
+    sysctl_commands = [{"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_source_route'": "[\s]*net\.ipv4\.conf\.all\.accept_source_route[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_source_route'": "[\s]*net\.ipv4\.conf\.default\.accept_source_route[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.icmp_echo_ignore_broadcasts'": "[\s]*net\.ipv4\.icmp_echo_ignore_broadcasts[\s]*=[\s]*1"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_redirects'": "[\s]*net\.ipv4\.conf\.default\.accept_redirects[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_redirects'": "[\s]*net\.ipv4\.conf\.all\.accept_redirects[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.send_redirects'": "[\s]*net\.ipv4\.conf\.default\.send_redirects[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.send_redirects'": "[\s]*net\.ipv4\.conf\.all\.send_redirects[\s]*=[\s]*0"},
+                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.ip_forward '": "^[\s]*net\.ipv4\.ip_forward[\s]*=[\s]*0"}]
+
+    for command in sysctl_commands:
+        for k,v in command.items():
+            output = host.run(k).stdout
+            assert bool(re.search(v, output))
+
+
+def test_nessus_rhel_07_040680(host):
+    """
+    rhel-07-040680 - The system must be configured to prevent unrestricted mail relaying
+    """
+
+    content = host.file('/etc/postfix/main.cf').content
+
+    assert bool(re.search("[\s]*smtpd_client_restrictions[\s]*=(.*permit.*reject|.*permit)", content))
+
+
+def test_nessus_rhel_07_040700(host):
+    """
+    rhel-07-040700 - The Trivial File Transfer Protocol (TFTP) server package must not be installed if not required for operational support
+    """
+
+    assert host.package('tftp-server').is_installed == False
+
+def test_nessus_rhel_07_041001(host):
+    """
+    rhel-07-041001 - The OS must have the required packages for multifactor authentication installed 
+    """
+
+    packages = ['esc', 'pam_pkcs11', 'authconfig-gtk']
+
+    for package in packages:
+        assert host.package(package).is_installed
