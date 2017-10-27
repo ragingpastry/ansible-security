@@ -54,6 +54,7 @@ def test_nessus_rhel_07_010119(host):
 
     assert pwquality_regex in content
 
+
 def test_nessus_rhel_07_010120_010190(host):
     """
     When passwords are changed or new passwords are established, the new password must contain
@@ -79,6 +80,7 @@ def test_nessus_rhel_07_010120_010190(host):
     assert "maxrepeat = 2" in content
     assert "maxclassrepeat = 4" in content
 
+
 def test_nessus_rhel_07_010200(host):
     """
     rhel-07-010200 - The PAM service must be configured to store only encrypted representations of passwords
@@ -98,6 +100,7 @@ def test_nessus_rhel_07_010210(host):
 
     assert "ENCRYPT_METHOD SHA512" in content
 
+
 def test_nessus_rhel_07_010220(host):
     """
     rhel-07-010220 - User and group account administration utilities must be configured to store only encrypted
@@ -107,6 +110,7 @@ def test_nessus_rhel_07_010220(host):
     content = host.file('/etc/libuser.conf').content
 
     assert bool(re.search("[\s]*crypt_style[\s]*=[\s]*sha512", content))
+
 
 def test_nessus_rhel_07_010230_010250(host):
     """
@@ -119,6 +123,7 @@ def test_nessus_rhel_07_010230_010250(host):
     assert bool(re.search("[\s]*PASS_MIN_DAYS[\s]*([1-9]|[1-9][0-9]+)", content))
     assert bool(re.search("[\s]*PASS_MAX_DAYS[\s]*([1-9]|[1-5][0-9]|60)", content))
 
+
 def test_nessus_rhel_07_010270(host):
     """
     rhel-07-010270 - Passwords must be prohibited from reuse for a minimum of five generations
@@ -127,6 +132,7 @@ def test_nessus_rhel_07_010270(host):
     content = host.file('/etc/pam.d/system-auth-ac').content
 
     assert bool(re.search("[\s]*password[\s]*sufficient[\s].*remember[\s]*=[\s]*[1-5]", content))
+
 
 def test_nessus_rhel_07_010280(host):
     """
@@ -137,6 +143,7 @@ def test_nessus_rhel_07_010280(host):
 
     assert bool(re.search("[\s]*minlen[\s]*=[\s]*(1[5-9]|[2-9][0-9])", content))
 
+
 def test_nessus_rhel_07_010290(host):
     """
     rhel-07-010290 - The system must not have accounts configured with blank or null passwords
@@ -144,7 +151,8 @@ def test_nessus_rhel_07_010290(host):
 
     content = host.file('/etc/pam.d/system-auth-ac').content
 
-    assert bool(re.search(".*nullok.*", content)) == False
+    assert not bool(re.search(".*nullok.*", content))
+
 
 def test_nessus_rhel_07_010300(host):
     """
@@ -154,6 +162,7 @@ def test_nessus_rhel_07_010300(host):
     content = host.file('/etc/ssh/sshd_config').content
 
     assert bool(re.search("[Pp]ermit[Ee]mpty[Pp]asswords[\s]*no", content))
+
 
 def test_nessus_rhel_07_010310(host):
     """
@@ -165,6 +174,7 @@ def test_nessus_rhel_07_010310(host):
 
     assert bool(re.search("INACTIVE[\s]*=[\s]*0", content))
 
+
 def test_nessus_rhel_07_010320_010330(host):
     """
     rhel-07-010320 - Accounts subject to three unsuccessful logon attempts within 15 minutes must be locked
@@ -172,10 +182,11 @@ def test_nessus_rhel_07_010320_010330(host):
 
     files = ['/etc/pam.d/system-auth-ac', '/etc/pam.d/password-auth-ac']
     for f in files:
-      content = host.file(f).content
-      assert bool(re.search("auth[\s]*required[\s]*pam_faillock\.so[\s]*preauth[\s]*silent[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
-      assert bool(re.search("auth[\s]*\[default=die\][\s]*pam_faillock\.so[\s]*authfail[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
-      assert bool(re.search("auth[\s]*sufficient[\s]*pam_unix\.so[\s]*try_first_pass", content))
+        content = host.file(f).content
+        assert bool(re.search("auth[\s]*required[\s]*pam_faillock\.so[\s]*preauth[\s]*silent[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
+        assert bool(re.search("auth[\s]*\[default=die\][\s]*pam_faillock\.so[\s]*authfail[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
+        assert bool(re.search("auth[\s]*sufficient[\s]*pam_unix\.so[\s]*try_first_pass", content))
+
 
 def test_nessus_rhel_07_010430(host):
     """
@@ -185,6 +196,7 @@ def test_nessus_rhel_07_010430(host):
     content = host.file('/etc/login.defs').content
 
     assert bool(re.search("[\s]*FAIL_DELAY[\s]*([4-9]|[1-9][0-9]+)", content))
+
 
 def test_nessu_rhel_07_010460_010470(host):
     """
@@ -197,14 +209,16 @@ def test_nessu_rhel_07_010460_010470(host):
     assert bool(re.search("[^#][\s]*[Pp]ermit[Uu]ser[Ee]nvironment[\s]*no", content))
     assert bool(re.search("[^#][\s]*[Hh]ostbased[Aa]uthentication[\s]*no", content))
 
+
 def test_nessus_rhel_07_020000_020010(host):
     """
     rhel-07-020000 - The rsh-server package must not be installed
     rhel-07-020010 - The ypserv package must not be installed
     """
 
-    assert host.package('rsh-server').is_installed == False
-    assert host.package('ypserv').is_installed == False
+    assert not host.package('rsh-server').is_installed
+    assert not host.package('ypserv').is_installed
+
 
 def test_nessus_rhel_07_020030_020040(host):
     """
@@ -216,6 +230,7 @@ def test_nessus_rhel_07_020030_020040(host):
     assert bool(re.search("[0-9,]+[\s]+[0-9,]+[\s]+\*[\s]+\*[\s]+\*[\s]+", root_crontab.stdout))
     assert bool(re.search("mail .+@.+", root_crontab.stdout))
     assert host.package('aide').is_installed
+
 
 def test_nessus_rhel_07_020050_020060_020200(host):
     """
@@ -230,6 +245,7 @@ def test_nessus_rhel_07_020050_020060_020200(host):
     assert bool(re.search("[\s]*localpkg_gpgcheck[\s]*=*[\s]*1[\s]*", content))
     assert bool(re.search("[\s]*clean_requirements_on_remove[\s]*=[\s]*", content))
 
+
 def test_nessus_rhel_07_020100(host):
     """
     rhel-07-020100 - USB mass storage must be disabled
@@ -238,6 +254,7 @@ def test_nessus_rhel_07_020100(host):
     content = host.file('/etc/modprobe.d/blacklist.conf').content
 
     assert bool(re.search("[\s]*blacklist[\s]*usb-storage", content))
+
 
 def test_nessus_rhel_07_020210_020220(host):
     """
@@ -256,7 +273,7 @@ def test_nessus_rhel_07_020230(host):
     rhel-07-020230 - The x86 Ctrl-Alt-Delete key sequence must be disabled - service
     """
 
-    assert host.service('ctrl-alt-del.service').is_enabled == False
+    assert not host.service('ctrl-alt-del.service').is_enabled
 
 
 def test_nessus_rhel_07_020600(host):
@@ -288,7 +305,7 @@ def test_nessus_rhel_07_021300(host):
     rhel-07-021300 - Kernel core dumps must be disabled unless needed
     """
 
-    assert host.service('kdump.service').is_enabled == False
+    assert not host.service('kdump.service').is_enabled
 
 
 def test_nessus_rhel_07_021320_0231340(host):
@@ -346,7 +363,8 @@ def test_nessus_rhel_07_021710(host):
     rhel-07-021710 - The telnet-server package must not be installed
     """
 
-    assert host.package('telnet-server').is_installed == False
+    assert not host.package('telnet-server').is_installed
+
 
 def test_nessus_rhel_07_030000(host):
     """
@@ -371,6 +389,7 @@ def test_nessus_rhel_07_030300_030320(host):
     assert bool(re.search("[\s]*disk_full_action[\s]*=[\s]*([Ss][Yy][Ss][Ll][Oo][Gg]|[Ss][Ii][Nn][Gg][Ll][Ee]|[Hh][Aa][Ll][Tt])", content))
     assert bool(re.search("[\s]*network_failure_action[\s]*=[\s]*([Ss][Yy][Ss][Ll][Oo][Gg]|[Ss][Ii][Nn][Gg][Ll][Ee]|[Hh][Aa][Ll][Tt])", content))
 
+
 def test_nessus_rhel_07_030330_030350(host):
     """
     rhel-07-030330 - The OS must immediately notify the SA and ISSO when allocated audit record storage volume reaches 75%"
@@ -383,6 +402,7 @@ def test_nessus_rhel_07_030330_030350(host):
     assert bool(re.search("[\s]*space_left[\s]*=[\s]*75", content))
     assert bool(re.search("[\s]*space_left_action[\s]*=[\s]*email", content))
     assert bool(re.search("[\s]*action_mail_acct[\s]*=[\s]*root", content))
+
 
 def test_nessus_rhel_07_030370_030400(host):
     """
@@ -461,7 +481,7 @@ def test_nessus_rhel_07_030370_030400(host):
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+removexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    
+
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
@@ -492,7 +512,6 @@ def test_nessus_rhel_07_030370_030400(host):
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
-
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+init_module[\s]+-k[\s]+module-change", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+delete_module[\s]+-k[\s]+module-change", content))
@@ -538,7 +557,7 @@ def test_nessus_rhel_07_030370_030400(host):
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postdrop[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postqueue[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
-    
+
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/libexec/openssh/ssh-keysign[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-ssh", content))
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/crontab[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-cron", content))
@@ -604,6 +623,7 @@ def test_nessus_rhel_07_040310(host):
 
     assert host.service('sshd').is_running
 
+
 def test_nessus_rhel_07_040320_040470(host):
     """
     rhel-07-040320 - All connections associated with SSH must terminate at the end of the session or after 10 minutes of inactivity
@@ -664,7 +684,8 @@ def test_nessus_rhel_07_040420(host):
 
 def test_nessus_rhel_07_040500(host):
     """
-    rhel-07-040500 - The OS must synchronize clocks with a server that is synchronized to one of the redundant time servers
+    rhel-07-040500 - The OS must synchronize clocks with a server that is synchronized
+    to one of the redundant time servers
     """
 
     assert host.service('chronyd').is_running
@@ -711,7 +732,7 @@ def test_nessus_rhel_07_040610(host):
                        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.ip_forward '": "^[\s]*net\.ipv4\.ip_forward[\s]*=[\s]*0"}]
 
     for command in sysctl_commands:
-        for k,v in command.items():
+        for k, v in command.items():
             output = host.run(k).stdout
             assert bool(re.search(v, output))
 
@@ -723,19 +744,23 @@ def test_nessus_rhel_07_040680(host):
 
     content = host.file('/etc/postfix/main.cf').content
 
-    assert bool(re.search("[\s]*smtpd_client_restrictions[\s]*=(.*permit.*reject|.*permit)", content))
+    assert bool(re.search(''.join((
+        '[\s]*smtpd_client_restrictions[\s]*=',
+        '(.*permit.*reject|.*permit)')), content))
 
 
 def test_nessus_rhel_07_040700(host):
     """
-    rhel-07-040700 - The Trivial File Transfer Protocol (TFTP) server package must not be installed if not required for operational support
+    rhel-07-040700 - The Trivial File Transfer Protocol (TFTP) server package
+    must not be installed if not required for operational support
     """
 
-    assert host.package('tftp-server').is_installed == False
+    assert not host.package('tftp-server').is_installed
+
 
 def test_nessus_rhel_07_041001(host):
     """
-    rhel-07-041001 - The OS must have the required packages for multifactor authentication installed 
+    rhel-07-041001 - The OS must have the required packages for multifactor authentication installed
     """
 
     packages = ['esc', 'pam_pkcs11', 'authconfig-gtk']
