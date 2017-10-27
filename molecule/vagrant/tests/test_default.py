@@ -183,8 +183,12 @@ def test_nessus_rhel_07_010320_010330(host):
     files = ['/etc/pam.d/system-auth-ac', '/etc/pam.d/password-auth-ac']
     for f in files:
         content = host.file(f).content
-        assert bool(re.search("auth[\s]*required[\s]*pam_faillock\.so[\s]*preauth[\s]*silent[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
-        assert bool(re.search("auth[\s]*\[default=die\][\s]*pam_faillock\.so[\s]*authfail[\s]*audit[\s]*deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800", content))
+        assert bool(re.search(''.join((
+            "auth[\s]*required[\s]*pam_faillock\.so[\s]*preauth[\s]*silent[\s]*audit[\s]*",
+            "deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800")), content))
+        assert bool(re.search(''.join((
+            "auth[\s]*\[default=die\][\s]*pam_faillock\.so[\s]*authfail[\s]*audit[\s]*",
+            "deny=3[\s]*even_deny_root[\s]*fail_interval=900[\s]*unlock_time=604800")), content))
         assert bool(re.search("auth[\s]*sufficient[\s]*pam_unix\.so[\s]*try_first_pass", content))
 
 
@@ -468,50 +472,130 @@ def test_nessus_rhel_07_030370_030400(host):
 
     content = host.file('/etc/audit/rules.d/audit.rules').content
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchownat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmodat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+setxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+removexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lchown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchownat[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+chmod[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmod[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fchmodat[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+setxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fsetxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lsetxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+removexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+fremovexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+lremovexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lchown[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchownat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmod[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmodat[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+setxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lsetxattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+removexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lremovexattr[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lchown[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchownat[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+chmod[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmod[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fchmodat[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+setxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fsetxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lsetxattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+removexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+fremovexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+lremovexattr[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+perm_mod")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+creat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+openat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open_by_handle_at[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+truncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+ftruncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+creat[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+openat[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+open_by_handle_at[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+truncate[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+ftruncate[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+creat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+openat[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open_by_handle_at[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+truncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+ftruncate[\s]+-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+creat[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+openat[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+open_by_handle_at[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+truncate[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+ftruncate[\s]+",
+        "-F[\s]+exit=-EACCES[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+access")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+mount[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+mount[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+mount[\s]+",
+        "-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount")), content))
 
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+init_module[\s]+-k[\s]+module-change", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+delete_module[\s]+-k[\s]+module-change", content))
@@ -519,50 +603,110 @@ def test_nessus_rhel_07_030370_030400(host):
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+init_module[\s]+-k[\s]+module-change", content))
     assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+delete_module[\s]+-k[\s]+module-change", content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+rename[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+renameat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+rmdir[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+unlink[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+unlinkat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+",
+        "rename[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+",
+        "renameat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+",
+        "rmdir[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+",
+        "unlink[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b64[\s]+-S[\s]+",
+        "unlinkat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rename[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+renameat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rmdir[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlink[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlinkat[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rename[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+renameat[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+rmdir[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlink[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+arch=b32[\s]+-S[\s]+unlinkat[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+delete")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/semanage[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/setsebool[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chcon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/restorecon[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/semanage[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/setsebool[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chcon[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/restorecon[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
 
     assert bool(re.search("[\s]*-w[\s]+/var/log/tallylog[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
     assert bool(re.search("[\s]*-w[\s]+/var/run/faillock/[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
     assert bool(re.search("[\s]*-w[\s]+/var/log/lastlog[\s]+-p[\s]+wa[\s]+-k[\s]+logins", content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/passwd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/unix_chkpwd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/userhelper[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/su[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/sudo[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/passwd[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/unix_chkpwd[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/gpasswd[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/userhelper[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-passwd")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/su[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/sudo[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
     assert bool(re.search("[\s]*-w[\s]+/etc/sudoers[\s]+-p[\s]+wa[\s]+-k[\s]+privileged-actions", content))
     assert bool(re.search("[\s]*-w[\s]+/etc/sudoers\.d[\s]+-p[\s]+wa[\s]+-k[\s]+privileged-actions", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/newgrp[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chsh[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/sudoedit[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/newgrp[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/chsh[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/sudoedit[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-priv_change")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/umount[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/bin/umount[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-mount")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postdrop[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postqueue[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postdrop[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix")), content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/sbin/postqueue[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-postfix")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/libexec/openssh/ssh-keysign[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-ssh", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/libexec/openssh/ssh-keysign[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-ssh")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/crontab[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-cron", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/usr/bin/crontab[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-cron")), content))
 
-    assert bool(re.search("[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/pam_timestamp_check[\s]+-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-pam", content))
+    assert bool(re.search(''.join((
+        "[\s]*-a[\s]+always,exit[\s]+-F[\s]+path=/sbin/pam_timestamp_check[\s]+",
+        "-F[\s]+perm=x[\s]+-F[\s]+auid>=1000[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+privileged-pam")), content))
 
     assert bool(re.search("[\s]*-w[\s]+/sbin/insmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
     assert bool(re.search("[\s]*-w[\s]+/sbin/rmmod[\s]+-p[\s]+x[\s]+-F[\s]+auid!=4294967295[\s]+-k[\s]+module-change", content))
@@ -711,25 +855,43 @@ def test_nessus_rhel_07_040530(host):
 
 def test_nessus_rhel_07_040610(host):
     """
-    rhel-07-040610 - The system must not forward Internet Protocol version 4 (IPv4) source-routed packets
-    rhel-07-040620 - The system must not forward Internet Protocol version 4 (IPv4) source-routed packets by default
-    rhel-07-040630 - The system must not respond to Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) echos.
-    rhel-07-040640 - The system must prevent Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
-    rhel-07-040641 - The system must ignore Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
-    rhel-07-040650 - The system must not allow interfaces to perform Internet Protocol version 4 (IPv4) ICMP redirects by default
-    rhel-07-040660 - The system must not send Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirects
-    rhel-07-040740 - The system must not be performing packet forwarding unless the system is a router
+    rhel-07-040610 - The system must not forward
+        Internet Protocol version 4 (IPv4) source-routed packets
+    rhel-07-040620 - The system must not forward
+        Internet Protocol version 4 (IPv4) source-routed packets by default
+    rhel-07-040630 - The system must not respond to
+        Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) echos.
+    rhel-07-040640 - The system must prevent
+        Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
+    rhel-07-040641 - The system must ignore
+        Internet Protocol version 4 (IPv4) Internet Control Message Protocol (ICMP) redirect messages
+    rhel-07-040650 - The system must not allow interfaces to perform
+        Internet Protocol version 4 (IPv4) ICMP redirects by default
+    rhel-07-040660 - The system must not send Internet Protocol version 4 (IPv4)
+        Internet Control Message Protocol (ICMP) redirects
+    rhel-07-040740 - The system must not be performing
+        packet forwarding unless the system is a router
     rhel-07-040830 - The system must no forward IPv6 source-routed packets
     """
 
-    sysctl_commands = [{"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_source_route'": "[\s]*net\.ipv4\.conf\.all\.accept_source_route[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_source_route'": "[\s]*net\.ipv4\.conf\.default\.accept_source_route[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.icmp_echo_ignore_broadcasts'": "[\s]*net\.ipv4\.icmp_echo_ignore_broadcasts[\s]*=[\s]*1"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_redirects'": "[\s]*net\.ipv4\.conf\.default\.accept_redirects[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_redirects'": "[\s]*net\.ipv4\.conf\.all\.accept_redirects[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.send_redirects'": "[\s]*net\.ipv4\.conf\.default\.send_redirects[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.send_redirects'": "[\s]*net\.ipv4\.conf\.all\.send_redirects[\s]*=[\s]*0"},
-                       {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.ip_forward '": "^[\s]*net\.ipv4\.ip_forward[\s]*=[\s]*0"}]
+    sysctl_commands = [
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_source_route'":
+            "[\s]*net\.ipv4\.conf\.all\.accept_source_route[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_source_route'":
+            "[\s]*net\.ipv4\.conf\.default\.accept_source_route[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.icmp_echo_ignore_broadcasts'":
+            "[\s]*net\.ipv4\.icmp_echo_ignore_broadcasts[\s]*=[\s]*1"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.accept_redirects'":
+            "[\s]*net\.ipv4\.conf\.default\.accept_redirects[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.accept_redirects'":
+            "[\s]*net\.ipv4\.conf\.all\.accept_redirects[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.default.send_redirects'":
+            "[\s]*net\.ipv4\.conf\.default\.send_redirects[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.conf.all.send_redirects'":
+            "[\s]*net\.ipv4\.conf\.all\.send_redirects[\s]*=[\s]*0"},
+        {"/usr/sbin/sysctl -a | /usr/bin/grep 'net.ipv4.ip_forward '":
+            "^[\s]*net\.ipv4\.ip_forward[\s]*=[\s]*0"}
+        ]
 
     for command in sysctl_commands:
         for k, v in command.items():
