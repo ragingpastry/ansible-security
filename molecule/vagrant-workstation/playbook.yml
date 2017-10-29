@@ -8,13 +8,6 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       become: True
       changed_when: False
-    - name: Install oscap
-      yum:
-        name: "{{ item }}"
-        state: installed
-      with_items:
-        - "openscap-scanner"
-        - "scap-security-guide"
 
 - name: Converge
   hosts: all
@@ -28,7 +21,7 @@
 
   post_tasks:
     - name: Reboot after converge
-      shell: ( sleep 3 && /sbin/reboot & )
-      async: 0
+      shell: sleep 3 && /sbin/reboot
+      async: 1
       poll: 0
       changed_when: False

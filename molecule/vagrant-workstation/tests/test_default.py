@@ -2,28 +2,9 @@ import os
 import re
 
 import testinfra.utils.ansible_runner
-import lxml.html
-from StringIO import StringIO
 
 testinfra_hosts = testinfra.utils.ansible_runner.AnsibleRunner(
     os.environ['MOLECULE_INVENTORY_FILE']).get_hosts('all')
-
-
-def test_openscap_compliance(host):
-
-    host.run("oscap xccdf eval "
-             "--profile xccdf_org.ssgproject.content_profile_stig-rhel7-disa "
-             "--results scan-xccdf-centos7-stig-sida_after.xml "
-             "--report /tmp/centos7-disa-stig-report_after.html "
-             "--oval-results "
-             "/usr/share/xml/scap/ssg/content/ssg-centos7-ds.xml")
-
-    html = host.file("/tmp/centos7-disa-stig-report_after.html").content_string
-    html = lxml.html.parse(StringIO(html))
-    oscap_results_preparsed = html.xpath('//*[@id="compliance-and-scoring"]/div[2]/div[2]/text()')
-    oscap_results = oscap_results_preparsed[0].split(' ')[0]
-
-    assert oscap_results <= '35'
 
 
 def test_nessus_rhel_07_010030(host):
@@ -43,7 +24,7 @@ def test_nessus_rhel_07_010040(host):
 
     content = host.file('/etc/dconf/db/local.d/01-banner-message').content
 
-    assert bool(re.search("[\s]*banner-message-text[\s]*=[\s]*.WARNING.*[\s]*", content))
+    assert bool(re.search("[\s]*banner-message-text[\s]*=[\s]*string.*WARNING.*", content))
 
 
 def test_nessus_rhel_07_010060(host):
@@ -66,12 +47,106 @@ def test_nessus_rhel_07_010070(host):
     assert bool(re.search("[\s]*idle-delay[\s]*=[\s]*uint32[\s]*([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|900)", content))
 
 
-# def test_nessus_rhel_07_010080(host):
-#    """
-#    rhel-07-010080 - The OS must set the idle delay setting for all connection types
-#    """
-#
-#    content = host.file('/etc/dconf/db/local.d/locks/')
+def test_nessus_rhel_07_010080(host):
+    """
+    rhel-07-010080 - The OS must set the idle delay setting for all connection types
+    """
+
+    lock_files = host.run('find /etc/dconf/db/local.d/locks/ -maxdepth 1 -type f').stdout
+
+    lock_file_found = 0
+
+    for lock_file in lock_files.split('\n'):
+        content = host.file(lock_file).content
+
+        if bool(re.search("/org/gnome/desktop/screensaver/idle-delay", content)):
+            lock_file_found = 1
+
+    assert lock_file_found == 1
+
+
+def test_nessus_rhel_07_010081(host):
+    """
+    rhel-07-010080 - THe OS must set the lock delay setting for all connection types
+    """
+
+    lock_files = host.run('find /etc/dconf/db/local.d/locks/ -maxdepth 1 -type f').stdout
+
+    lock_file_found = 0
+
+    for lock_file in lock_files.split('\n'):
+        content = host.file(lock_file).content
+
+        if bool(re.search("/org/gnome/desktop/screensaver/lock-delay", content)):
+            lock_file_found = 1
+
+    assert lock_file_found == 1
+
+
+def test_nessus_rhel_07_010082(host):
+    """
+    rhel-07-010082 - The OS must set the session idle delay setting for all connection types
+    """
+
+    lock_files = host.run('find /etc/dconf/db/local.d/locks/ -maxdepth 1 -type f').stdout
+
+    lock_file_found = 0
+
+    for lock_file in lock_files.split('\n'):
+        content = host.file(lock_file).content
+
+        if bool(re.search("/org/gnome/desktop/session/idle-delay", content)):
+            lock_file_found = 1
+
+    assert lock_file_found == 1
+
+
+def test_nessus_rhel_07_010100(host):
+    """
+    rhel-07-010100 - The OS must initiate a session lock for the screensaver after a period of inactivity for graphical user interfaces
+    """
+
+    dconf_files = host.run('find /etc/dconf/db/local.d/ -maxdepth 1 -type f').stdout
+
+    dconf_file_found = 0
+
+    for dconf_file in dconf_files.split('\n'):
+        content = host.file(dconf_file).content
+
+        if bool(re.search("[\s]*idle-activation-enabled[\s]*=[\s]*true", content)):
+            dconf_file_found = 1
+
+    assert dconf_file_found == 1
+
+
+def test_nessus_rhel_07_010110(host):
+    """
+    rhel-07-010110 - The OS must initiate a session lock for graphical user interfaces when the screensaver is activated
+    """
+
+    dconf_files = host.run('find /etc/dconf/db/local.d/ -maxdepth 1 -type f').stdout
+
+    dconf_file_found = 0
+
+    for dconf_file in dconf_files.split('\n'):
+        content = host.file(dconf_file).content
+
+        if bool(re.search("[\s]*lock-delay[\s]*=[\s]*uint32[\s]*5", content)):
+            dconf_file_found = 1
+
+    assert dconf_file_found == 1
+
+
+def test_nessus_rhel_07_010440_010450(host):
+    """
+    rhel-07-010440 - The OS must not allow an unattended or automatic logon to the system via a graphical user interface
+    rhel-07-010450 - The OS must not allow an unrestricted logon to the system
+    """
+
+    content = host.file('/etc/gdm/custom.conf').content
+
+    assert bool(re.search("[\s]*AutomaticLoginEnable[\s]*=[\s]*false", content))
+    assert bool(re.search("[\s]*TimedLoginEnable[\s]*=[\s]*false", content))
 
 
 def test_nessus_rhel_07_010050(host):
@@ -325,6 +400,9 @@ def test_nessus_rhel_07_020230(host):
     rhel-07-020230 - The x86 Ctrl-Alt-Delete key sequence must be disabled - service
     """
 
+    content = host.file('/etc/dconf/db/local.d/00-disable-CAD').content
+
+    assert bool(re.search("[\s]*logout[\s]*=[\s]*''", content))
     assert not host.service('ctrl-alt-del.service').is_enabled
 
 
